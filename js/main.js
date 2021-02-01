@@ -5,18 +5,40 @@ const botonRetroceder = document.querySelector('#retroceder');
 //capturamos la template y su primer elemento
 const templateCirculo = document.querySelector('#template-circulo').content.firstElementChild;
 const circulos = document.querySelector('#circulos');
+const botonParar = document.querySelector('#parar');
+const botonAutoplay = document.querySelector('#autoplay');
+let intervalo = null;
+const tiempoIntervaloSeg = 1;
 const imagenes = ['img/img1.jpg', 'img/img2.jpg', 'img/img3.jpg'];
 // pagina para indicar donde estoy
 let pagina = 1;
+// 1 seg = 1000 mseg
 
 
 //FUNCIONES
+
+function activarAutoplay() {
+    //si no existe
+    if (intervalo === null) {
+    // equivalente : intervalo = setInterval(avanzarFoto, tiempoIntervaloSeg * 1000);
+        intervalo = setInterval(function () {
+            avanzarFoto();
+        }, tiempoIntervaloSeg * 1000);
+    }
+}
+
+function desactivarAutoplay() {
+    clearInterval(intervalo);
+    intervalo = null;
+}
+
+
+
 
 function cambiarPagina(nuevaPagina) {
     pagina = nuevaPagina;
     render();
 }
-
 
 
 function avanzarFoto() {
@@ -40,8 +62,9 @@ function retrocederFoto() {
 function render() {
     //Imagen
     objetoImg.setAttribute('src', imagenes[pagina - 1]);
-    //Circulos
+    //Borramos los circulos
     circulos.textContent = '';
+    //Creamos todos los circulos
     imagenes.forEach(function (imagen, indice) {
         const nuevoCirculo = templateCirculo.cloneNode(true);
         nuevoCirculo.addEventListener('click', function () {
@@ -57,11 +80,11 @@ function render() {
 }
 
 
-
-
 //EVENTOS
 botonAvanzar.addEventListener('click', avanzarFoto);
 botonRetroceder.addEventListener('click', retrocederFoto);
+botonAutoplay.addEventListener('click',activarAutoplay);
+botonParar.addEventListener('click', desactivarAutoplay);
 
 
 
